@@ -262,6 +262,59 @@ class Quickpay {
 	}							
 
 	/**
+	* Handles the response for the callback URL.
+	*
+	* @param array $data The postdata - if not set, it will fetch it automatically.
+	* @return object An object with response fields according to the documentation
+	*/
+	public function callback($data = NULL)
+	{
+		if( is_null($data) )
+		{
+			$data = $_POST;
+		}	
+		return $this->_response($data);
+	}							
+	
+	/**
+	* Generate the hidden fields for the QuickPay Payment Window.
+	*
+	* @param array $input_data The form data to send with the request
+	* @param boolean $xhtml Set to TRUE to close tags in XHTML form.
+	* @return string The hidden fields in HTML form.
+	*/
+	public function form_fields($input_data, $xhtml = FALSE)
+	{		
+		$reserved_fields = array('protocol', 'merchant', 'testmode');
+		$valid_input_ordered = array('protocol', 'msgtype', 'merchant', 'language', 'ordernumber', 'amount', 'currency', 'continueurl', 'cancelurl', 'callbackurl', 'autocapture', 'autofee', 'cardtypelock', 'description', 'group', 'testmode', 'splitpayment', 'forcemobile', 'deadline');
+		
+		foreach($valid_input_ordered as $key)
+		{
+			// Is the key a reserved field?
+			if(in_array($key, $reserved_fields))
+			{
+				$data_fields[$key] = $this->{$key};
+				continue;
+			}
+			
+			if(isset($input_data[$key]))
+			{
+				$data_fields[$key] = $input_data[$key];
+			}			
+		}
+		
+		$html = '';
+		$html_end = ($xhtml) ? ' />' : '>';
+		$data_fields['md5check'] = md5(implode("", $data_fields) . $this->secret);
+		foreach($data_fields as $key => $value)
+		{
+			$html .= '<input type="hidden" name="'.$key.'" value="'.$value.'"'.$html_end;
+		}
+		
+		return $html;
+	}							
+
+	/**
 	* Calls the API
 	* 
 	* @param array $data_fields An array filled with nessecary information for making the request

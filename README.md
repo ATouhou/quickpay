@@ -23,14 +23,22 @@ Amounts for all transactions is written in its smallest unit. For example, 1 EUR
 
 	// This instantiation example assumes that you have NOT whitelisted your servers IP and need to make use of the API key as the third parameter.
 	$qp = new Quickpay(11111111, '569ef72642be0fadd711d6a468d68ee1d6b3c0ad82178d0242a6b36339051ca2', '3c0ad82182178d0242a69051c[...]b78d0242a6b3633');
-	
+
+Enabling testmode
+-----------------
+
+This is really simple. As soon as you have created an instance of the QuickPay object, just do the following:
+
+	$qp->testmode(TRUE);
+
 Message Types
 -------------
 
 Assuming that you already created an instance of the QuickPay object, you can now contact the API with all available message types.
 
 ***Warning!***<br>
-You are only allowed to do authorizes and subscribes through the Quickpay API if your setup has passed the full PCI certification. Please use the Quickpay Payment Window instead.
+You are only allowed to do authorizes and subscribes through the QuickPay API if your setup has passed the full PCI certification. Please use the QuickPay Payment Window instead.<br>
+Please refer to the bottom of this document to see uses with the QuickPay Payment Window.
 
 **Message type: authorize**
 
@@ -141,7 +149,7 @@ Handling the response will be explained further down.
 
 The `$response` variable from the examples contains and object with the following public members:
 
- - msgtype -*Defines which action was performed*
+ - msgtype - *Defines which action was performed*
  - ordernumber - *A value specified by merchant in the initial request.*
  - amount - *The amount defined in the request in its smallest unit. In example, 1 EUR is written 100.*
  - balance - *Total amount captured. Only present on status request*
@@ -166,7 +174,7 @@ The `$response` variable from the examples contains and object with the followin
  - is_valid - *Contains a boolean which indicates whether or not the response is valid and untampered with.*
  
 **Note:**<br>
-For status request, another member for the object is present named *history* which contains an array with objects containing these members:
+For status request, another member for the response object is present named *history* which contains an array with objects containing these members:
  - msgtype
  - amount
  - state
@@ -191,3 +199,53 @@ The simple way to handle the response from your request would to make sure that 
 		var_dump($response->chstat);
 		var_dump($response->chstatmsg);
 	}
+	
+QuickPay Payment Window
+-----------------------
+
+To avoid the PCI certification, you should use the QuickPay Payment Window solution.
+
+See all available fields here: <http://doc.quickpay.net/paymentwindow/technicalspecification.html#index1h2>
+
+A simple helper is also implemented for creating the nessecary fields AND creating the md5 checksum.<br>
+See this example:
+
+	<?php
+	
+		include 'quickpay.obj.php';		
+		$qp = new Quickpay(11111111, '569ef72642be0fadd711d6a468d68ee1d6b3c0ad82178d0242a6b36339051ca2');
+		
+		$data_fields['msgtype'] = 'authorize';	
+		$data_fields['language'] = 'en';	
+		$data_fields['ordernumber'] = time();	
+		$data_fields['amount'] = '100';	
+		$data_fields['currency'] = 'EUR';
+		$data_fields['continueurl'] = 'http://quickpay.net/features/payment-window/ok.php';
+		$data_fields['cancelurl'] = 'http://quickpay.net/features/payment-window/error.php';
+		$data_fields['callbackurl'] = 'http://quickpay.net/features/payment-window/callback.php';
+	
+	?>
+	<form action="https://secure.quickpay.dk/form/" method="post">
+		<?php echo $qp->form_fields($data_fields); ?>
+	<input type="submit" value="Open Quickpay payment window" />
+	
+This create the form with the necessary input fields and pushing the submit button will open the QuickPay Payment window.
+
+For the callback provided in the callbackurl field, you can get the same response object as used in the API:
+
+	<?php
+	
+		include 'quickpay.obj.php';		
+		$qp = new Quickpay(11111111, '569ef72642be0fadd711d6a468d68ee1d6b3c0ad82178d0242a6b36339051ca2');
+		
+		$response = $qp->callback();	
+		foreach($response as $key => $value)
+		{
+			$message .= "{$key}: {$value}\r\n";
+		}
+		mail('you@example.com', 'callbackurl', $message);		
+
+	?>
+	
+The last example handles the response as mails you the data recieved.<br>
+To validate the response, do as stated in earlier like mentioned in the API solution.
