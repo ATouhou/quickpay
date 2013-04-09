@@ -5,9 +5,19 @@ QuickPay API Library
 This library will enable you to communicate with the [QuickPay API](http://quickpay.net/features/api/).<br>
 Documentation can be found here: <http://doc.quickpay.net/api.html>
 
+Installation using Composer
+---------------------------
+For installing with Composer, you should require this:
+
+    "repox/quickpay": "@dev"  
+
 
 Usage
 -----
+
+If you are not autoloading the object with Composer or some other, be sure include the object file when you need it:
+
+    include 'Quickpay.php';
 
 To use the object, just include the QuickPay object file and create an instance.<br>
 For creating an instance, make sure you have your QuickPay ID and MD5 secret code ready.<br>
@@ -16,7 +26,6 @@ If you haven't whitelisted your servers IP through the [QuickPay manager](https:
 Amounts for all transactions is written in its smallest unit. For example, 1 EUR is written 100
 
 <!-- language-all: lang-php -->
-	include 'quickpay.php';
 	
 	// This instantiation example assumes that you have whitelisted your servers IP.
 	$qp = new Quickpay(11111111, '569ef72642be0fadd711d6a468d68ee1d6b3c0ad82178d0242a6b36339051ca2');
@@ -212,7 +221,7 @@ See this example:
 
 	<?php
 	
-		include 'quickpay.php';		
+				
 		$qp = new Quickpay(11111111, '569ef72642be0fadd711d6a468d68ee1d6b3c0ad82178d0242a6b36339051ca2');
 		
 		$data_fields['msgtype'] = 'authorize';	
@@ -235,7 +244,7 @@ For the callback provided in the callbackurl field, you can get the same respons
 
 	<?php
 	
-		include 'quickpay.php';		
+				
 		$qp = new Quickpay(11111111, '569ef72642be0fadd711d6a468d68ee1d6b3c0ad82178d0242a6b36339051ca2');
 		
 		$response = $qp->callback();	

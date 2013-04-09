@@ -1,6 +1,6 @@
 {
     "name": "repox/quickpay",
-    "version": "1.0.0-dev",
+    "version": "1.0.1-dev",
     "type": "library",
     "description": "QuickPay API Integration and a simple QuickPay Payment Window helper",
     "keywords": ["quickpay", "quickpay api", "payment gateway"],
