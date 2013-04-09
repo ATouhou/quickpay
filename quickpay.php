@@ -1,5 +1,4 @@
 <?php
-
 /**
 * This class works with the QuickPay API for the version 5 protocol.
 * Technical documentation can be located at http://doc.quickpay.net/

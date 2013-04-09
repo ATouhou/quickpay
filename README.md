@@ -16,7 +16,7 @@ If you haven't whitelisted your servers IP through the [QuickPay manager](https:
 Amounts for all transactions is written in its smallest unit. For example, 1 EUR is written 100
 
 <!-- language-all: lang-php -->
-	include 'quickpay.obj.php';
+	include 'quickpay.php';
 	
 	// This instantiation example assumes that you have whitelisted your servers IP.
 	$qp = new Quickpay(11111111, '569ef72642be0fadd711d6a468d68ee1d6b3c0ad82178d0242a6b36339051ca2');
@@ -212,7 +212,7 @@ See this example:
 
 	<?php
 	
-		include 'quickpay.obj.php';		
+		include 'quickpay.php';		
 		$qp = new Quickpay(11111111, '569ef72642be0fadd711d6a468d68ee1d6b3c0ad82178d0242a6b36339051ca2');
 		
 		$data_fields['msgtype'] = 'authorize';	
@@ -235,7 +235,7 @@ For the callback provided in the callbackurl field, you can get the same respons
 
 	<?php
 	
-		include 'quickpay.obj.php';		
+		include 'quickpay.php';		
 		$qp = new Quickpay(11111111, '569ef72642be0fadd711d6a468d68ee1d6b3c0ad82178d0242a6b36339051ca2');
 		
 		$response = $qp->callback();	
