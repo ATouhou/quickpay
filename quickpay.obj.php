@@ -59,7 +59,6 @@ class Quickpay {
 		$this->testmode = (int)$boolean;
 	}
 	
-	
 	/**
 	* Make an authorize action
 	*
@@ -327,13 +326,13 @@ class Quickpay {
 		$ch = curl_init();		
 		curl_setopt($ch, CURLOPT_URL, 'https://secure.quickpay.dk/api');
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_AUTOREFERER, true); 
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION,true);
-        curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_POST, true);        
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_fields);
-        
+		curl_setopt($ch, CURLOPT_AUTOREFERER, true); 
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION,true);
+		curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_POST, true);		
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_fields);
+		
      	$content = curl_exec($ch);
      	curl_close($ch);
      	     	
@@ -348,7 +347,13 @@ class Quickpay {
 	*/									
 	private function _response($xml)
 	{
-		$xml = new SimpleXMLElement($xml);
+		try
+		{
+			$xml = new SimpleXMLElement($xml);
+		}
+		catch( Exception $e)
+		{}
+		
 		$response = new stdClass();
 		$md5string = '';
 		foreach($xml as $key => $value)
